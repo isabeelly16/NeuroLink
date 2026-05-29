@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>NeuroLink - Consultas</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body class="bg-light">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow">
+        <a class="navbar-brand font-weight-bold" href="{% url 'index' %}">🧠 NeuroLink</a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item"><a class="nav-link" href="{% url 'paciente' %}">Pacientes</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'psicologo' %}">Psicólogos</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'consulta' %}">Consultas</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'cidade' %}">Cidades</a></li>
+            </ul>
+            <a class="btn btn-warning font-weight-bold" href="/admin/">Acessar Admin</a>
+        </div>
+    </nav>
+    <div class="container mt-5">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white font-weight-bold">📋 LISTAGEM DE CONSULTAS</div>
+            <div class="card-body">
+                <ul class="list-group">
+                    {% for item in consultas %}
+                        <li class="list-group-item">{{ item }}</li>
+                    {% empty %}
+                        <li class="list-group-item text-danger text-center">Nenhuma consulta agendada no banco de dados.</li>
+                    {% endfor %}
+                </ul>
+                <div class="mt-4">
+                    <a href="{% url 'index' %}" class="btn btn-secondary">Voltar</a>
+                    <a href="/admin/" class="btn btn-warning font-weight-bold">Cadastrar no Admin</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

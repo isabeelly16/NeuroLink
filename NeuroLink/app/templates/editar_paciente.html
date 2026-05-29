@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>NeuroLink - Editar Paciente</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body class="bg-light">
+    <div class="container mt-5">
+        <div class="card shadow border-warning">
+            <div class="card-header bg-warning text-dark font-weight-bold">✏️ EDITAR DADOS DO PACIENTE</div>
+            <div class="card-body">
+                
+                <h5 class="text-muted mb-4">Paciente Atual: <span class="text-dark">{{ paciente.nome }}</span></h5>
+                
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="form-group">
+                        <label class="font-weight-bold">Nome Completo:</label>
+                        <input type="text" name="nome" class="form-control" value="{{ paciente.nome }}" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="font-weight-bold">CPF:</label>
+                        <input type="text" name="cpf" class="form-control" value="{{ paciente.cpf }}">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="font-weight-bold">E-mail de Contato:</label>
+                        <input type="email" name="email" class="form-control" value="{{ paciente.email }}">
+                    </div>
+
+                    <div class="mt-4">
+                        <button type="submit" class="btn btn-success px-4">Salvar Alterações</button>
+                        <a href="{% url 'paciente' %}" class="btn btn-secondary px-4">Cancelar</a>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</body>
+</html>

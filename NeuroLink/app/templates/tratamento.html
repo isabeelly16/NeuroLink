@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>NeuroLink - Tratamentos</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body class="bg-light">
+    <div class="container mt-5">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white font-weight-bold">📋 LISTAGEM DE TRATAMENTOS</div>
+            <div class="card-body">
+                <ul class="list-group">
+                    {% for item in tratamentos %}
+                        <li class="list-group-item">{{ item }}</li>
+                    {% empty %}
+                        <li class="list-group-item text-danger text-center">Nenhum tratamento registrado no banco de dados.</li>
+                    {% endfor %}
+                </ul>
+                <div class="mt-4">
+                    <a href="{% url 'index' %}" class="btn btn-secondary">Voltar</a>
+                    <a href="/admin/" class="btn btn-warning font-weight-bold">Cadastrar no Admin</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

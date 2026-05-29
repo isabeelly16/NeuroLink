@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>NeuroLink - Pacientes</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body class="bg-light">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow">
+        <a class="navbar-brand font-weight-bold" href="{% url 'index' %}">🧠 NeuroLink</a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item"><a class="nav-link" href="{% url 'paciente' %}">Pacientes</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'psicologo' %}">Psicólogos</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'consulta' %}">Consultas</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'cidade' %}">Cidades</a></li>
+            </ul>
+            <a class="btn btn-warning font-weight-bold" href="/admin/">Acessar Admin</a>
+        </div>
+    </nav>
+    <div class="container mt-5">
+        
+        <!-- Mensagens de Sucesso do Django -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-success shadow-sm">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white font-weight-bold">📋 PAINEL DE CONTROLE DE PACIENTES</div>
+            <div class="card-body">
+                
+                <table class="table table-hover border">
+                    <thead class="thead-light">
+                        <tr>
+                            <th>Nome do Paciente</th>
+                            <th class="text-center">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in pacientes %}
+                            <tr>
+                                <td class="align-middle font-weight-bold text-secondary">{{ item.nome }}</td>
+                                <td class="text-center">
+                                    <!-- Botões com as rotas que criamos -->
+                                    <a href="{% url 'editar_paciente' item.id %}" class="btn btn-sm btn-warning">Editar</a>
+                                    <a href="{% url 'delete_paciente' item.id %}" class="btn btn-sm btn-danger" onclick="return confirm('Tem certeza que deseja excluir?')">Excluir</a>
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="2" class="text-danger text-center font-italic">Nenhum paciente cadastrado no sistema.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                <div class="mt-4">
+                    <a href="{% url 'index' %}" class="btn btn-secondary">Voltar para Home</a>
+                    <a href="/admin/" class="btn btn-success font-weight-bold">Cadastrar Novo no Admin</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
