@@ -2,43 +2,257 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>NeuroLink - Editar Paciente</title>
+    <title>NeuroLink - Premium Editar Paciente</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Ícones do FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        :root {
+            --bg-main: #0f141c; 
+            --bg-card: #182030; 
+            --bg-input: #111827;
+            --text-main: #f8fafc; 
+            --text-muted: #64748b; 
+            --accent-cyan: #38bdf8; 
+            --accent-warning: #fbbf24;
+            --accent-success: #34d399;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            font-family: 'Inter', 'Segoe UI', Roboto, sans-serif;
+            letter-spacing: -0.01em;
+        }
+
+        /* Barra de navegação unificada */
+        .custom-nav {
+            background-color: #131a26 !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        }
+        
+        .nav-link { 
+            color: #94a3b8 !important;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+        .nav-link:hover {
+            color: var(--accent-cyan) !important;
+        }
+
+        .dropdown-menu {
+            background-color: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+        }
+        .dropdown-item {
+            color: #94a3b8;
+            transition: all 0.2s ease;
+        }
+        .dropdown-item:hover {
+            background-color: rgba(56, 189, 248, 0.08);
+            color: var(--accent-cyan);
+        }
+
+        /* Estrutura do Card de Conteúdo Principal */
+        .main-card {
+            background-color: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+        }
+
+        .main-card-header {
+            background-color: rgba(255, 255, 255, 0.01);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 1.5rem;
+            letter-spacing: 0.5px;
+        }
+
+        /* Formulários e Inputs Premium */
+        .form-group label {
+            color: #94a3b8;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .custom-input {
+            background-color: var(--bg-input) !important;
+            border: 1px solid rgba(255, 255, 255, 0.08) !important;
+            color: var(--text-main) !important;
+            border-radius: 10px !important;
+            padding: 0.75rem 1rem;
+            height: auto;
+            transition: all 0.2s ease;
+        }
+
+        .custom-input:focus {
+            background-color: var(--bg-input) !important;
+            border-color: var(--accent-cyan) !important;
+            box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15) !important;
+            outline: none;
+        }
+
+        /* Botões customizados */
+        .btn-premium {
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #e2e8f0;
+            border-radius: 10px;
+            font-weight: 500;
+            background-color: rgba(255, 255, 255, 0.02);
+            transition: all 0.2s ease;
+        }
+        .btn-premium:hover {
+            background-color: var(--text-main);
+            color: var(--bg-main);
+        }
+
+        .btn-save {
+            background-color: rgba(52, 211, 153, 0.1);
+            border: 1px solid var(--accent-success);
+            color: var(--accent-success) !important;
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+        .btn-save:hover {
+            background-color: var(--accent-success);
+            color: var(--bg-main) !important;
+            box-shadow: 0 4px 12px rgba(52, 211, 153, 0.2);
+        }
+
+        .btn-admin {
+            border: 1px solid var(--accent-cyan);
+            color: var(--accent-cyan) !important;
+            border-radius: 10px;
+            transition: all 0.2s ease;
+        }
+        .btn-admin:hover {
+            background-color: var(--accent-cyan);
+            color: var(--bg-main) !important;
+        }
+    </style>
 </head>
-<body class="bg-light">
+<body>
+
+    <!-- BARRA DE NAVEGAÇÃO -->
+    <nav class="navbar navbar-expand-lg navbar-dark custom-nav shadow-sm mb-4">
+        <div class="container">
+            <a class="navbar-brand font-weight-bold text-white" href="{% url 'index' %}">🧠 NeuroLink</a>
+            
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#menuNeuroLink" aria-controls="menuNeuroLink" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="menuNeuroLink">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item"><a class="nav-link" href="{% url 'paciente' %}">Pacientes</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'psicologo' %}">Psicólogos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'consulta' %}">Consultas</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'medicamento' %}">Medicamentos</a></li>
+                    
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navClinicas" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Clínicas & Locais
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navClinicas">
+                            <a class="dropdown-item" href="{% url 'clinica' %}">Clínicas</a>
+                            <a class="dropdown-item" href="{% url 'cidade' %}">Cidades</a>
+                        </div>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navAcompanhamento" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Acompanhamento
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navAcompanhamento">
+                            <a class="dropdown-item" href="{% url 'registro_diario' %}">Registro Diário</a>
+                            <a class="dropdown-item" href="{% url 'emocao' %}">Emoções</a>
+                            <a class="dropdown-item" href="{% url 'tratamento' %}">Tratamentos</a>
+                            <a class="dropdown-item" href="{% url 'historico_acompanhamento' %}">Histórico de Acompanhamento</a>
+                        </div>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navAnalises" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Análises & Relatórios
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navAnalises">
+                            <a class="dropdown-item" href="{% url 'analise_comportamental' %}">Análise Comportamental</a>
+                            <a class="dropdown-item" href="{% url 'categoria_risco' %}">Categorias de Risco</a>
+                            <a class="dropdown-item" href="{% url 'relatorio_emocional' %}">Relatório Emocional</a>
+                        </div>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navAlertas" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Alertas & Logs
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navAlertas">
+                            <a class="dropdown-item" href="{% url 'alerta' %}">Alertas</a>
+                            <a class="dropdown-item" href="{% url 'notificacao' %}">Notificações</a>
+                        </div>
+                    </li>
+                </ul>
+                <a class="btn btn-admin font-weight-bold px-4" href="/admin/">Acessar Admin</a>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- CONTEÚDO EDITAR PACIENTE -->
     <div class="container mt-5">
-        <div class="card shadow border-warning">
-            <div class="card-header bg-warning text-dark font-weight-bold">✏️ EDITAR DADOS DO PACIENTE</div>
-            <div class="card-body">
+        <div class="card main-card shadow-lg mx-auto" style="max-width: 600px;">
+            <div class="main-card-header font-weight-bold text-white d-flex align-items-center">
+                <i class="fas fa-user-edit mr-3" style="color: var(--accent-warning); font-size: 1.25rem;"></i>
+                ✏️ EDITAR DADOS DO PACIENTE
+            </div>
+            <div class="card-body p-4">
                 
-                <h5 class="text-muted mb-4">Paciente Atual: <span class="text-dark">{{ paciente.nome }}</span></h5>
+                <div class="mb-4 pb-3 border-bottom" style="border-bottom-color: rgba(255,255,255,0.05) !important;">
+                    <span class="small d-block text-uppercase font-weight-bold tracking-wider" style="color: var(--text-muted);">Prontuário Ativo</span>
+                    <h5 class="text-white font-weight-bold mb-0 mt-1">{{ paciente.nome }}</h5>
+                </div>
                 
                 <form method="post">
                     {% csrf_token %}
                     
-                    <div class="form-group">
-                        <label class="font-weight-bold">Nome Completo:</label>
-                        <input type="text" name="nome" class="form-control" value="{{ paciente.nome }}" required>
+                    <div class="form-group mb-3">
+                        <label class="font-weight-bold"><i class="far fa-user mr-2"></i>Nome Completo</label>
+                        <input type="text" name="nome" class="form-control custom-input" value="{{ paciente.nome }}" required autocomplete="off">
                     </div>
 
-                    <div class="form-group">
-                        <label class="font-weight-bold">CPF:</label>
-                        <input type="text" name="cpf" class="form-control" value="{{ paciente.cpf }}">
+                    <div class="form-group mb-3">
+                        <label class="font-weight-bold"><i class="far fa-id-card mr-2"></i>CPF</label>
+                        <input type="text" name="cpf" class="form-control custom-input" value="{{ paciente.cpf }}" autocomplete="off">
                     </div>
 
-                    <div class="form-group">
-                        <label class="font-weight-bold">E-mail de Contato:</label>
-                        <input type="email" name="email" class="form-control" value="{{ paciente.email }}">
+                    <div class="form-group mb-4">
+                        <label class="font-weight-bold"><i class="far fa-envelope mr-2"></i>E-mail de Contato</label>
+                        <input type="email" name="email" class="form-control custom-input" value="{{ paciente.email }}" autocomplete="off">
                     </div>
 
-                    <div class="mt-4">
-                        <button type="submit" class="btn btn-success px-4">Salvar Alterações</button>
-                        <a href="{% url 'paciente' %}" class="btn btn-secondary px-4">Cancelar</a>
+                    <!-- Botões de Ação -->
+                    <div class="mt-4 pt-3 text-right">
+                        <a href="{% url 'paciente' %}" class="btn btn-premium px-4 mr-2">
+                            Cancelar
+                        </a>
+                        <button type="submit" class="btn btn-save px-4">
+                            <i class="fas fa-check mr-2"></i>Salvar Alterações
+                        </button>
                     </div>
                 </form>
 
             </div>
         </div>
     </div>
+
+    <!-- NOTA DE RODAPÉ -->
+    <footer class="text-center py-4 mt-5" style="background-color: #0c1017; border-top: 1px solid rgba(255, 255, 255, 0.02);">
+        <p class="mb-0 small" style="color: #475569;">&copy; 2026 NeuroLink - Sistema de Monitoramento de Saúde Mental Integrado.</p>
+    </footer>
+
+    <!-- SCRIPTS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

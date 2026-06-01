@@ -2,30 +2,364 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>NeuroLink - Home</title>
+    <title>NeuroLink - Premium Dashboard</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <style>.nav-link { color: #ffffff !important; }</style>
+    <!-- Ícones do FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        :root {
+            --bg-main: #121824; /* Fundo escuro espacial */
+            --bg-card: #1e2640; /* Cinza azulado para os cards */
+            --text-main: #f8fafc; /* Texto claro */
+            --text-muted: #94a3b8; /* Texto secundário */
+            --accent-cyan: #06b6d4; /* Turquesa/Ciano icônico */
+            --accent-green: #10b981; /* Verde esmeralda */
+            --accent-purple: #6366f1; /* Roxo indigo */
+            --accent-red: #f43f5e; /* Vermelho coral */
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            font-family: 'Inter', 'Segoe UI', Roboto, sans-serif;
+            letter-spacing: -0.01em;
+        }
+
+        /* Barra de navegação com efeito Glassmorphism */
+        .custom-nav {
+            background-color: rgba(30, 38, 64, 0.8) !important;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .nav-link { 
+            color: var(--text-muted) !important;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+        .nav-link:hover {
+            color: var(--accent-cyan) !important;
+        }
+
+        .dropdown-menu {
+            background-color: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        .dropdown-item {
+            color: var(--text-muted);
+            transition: all 0.2s ease;
+        }
+        .dropdown-item:hover {
+            background-color: rgba(6, 182, 212, 0.1);
+            color: var(--accent-cyan);
+        }
+
+        /* Estilização dos Cards Super Iconicos */
+        .premium-card {
+            background-color: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.03) !important;
+            border-radius: 16px !important;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
+        .hover-card:hover {
+            transform: translateY(-6px);
+            border-color: rgba(6, 182, 212, 0.3) !important;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4) !important;
+        }
+
+        /* Formato dos ícones superiores */
+        .icon-shape {
+            width: 52px;
+            height: 52px;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        /* Cores dos gradientes dos KPIs */
+        .g-cyan { background: linear-gradient(135deg, #0e7490, #06b6d4); }
+        .g-green { background: linear-gradient(135deg, #047857, #10b981); }
+        .g-purple { background: linear-gradient(135deg, #4338ca, #6366f1); }
+        .g-red { background: linear-gradient(135deg, #be123c, #f43f5e); }
+
+        /* Botões customizados */
+        .btn-premium-cyan {
+            border: 1px solid var(--accent-cyan);
+            color: var(--accent-cyan);
+            border-radius: 10px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+        .btn-premium-cyan:hover {
+            background-color: var(--accent-cyan);
+            color: var(--bg-main);
+            box-shadow: 0 0 15px rgba(6, 182, 212, 0.4);
+        }
+
+        .btn-admin {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: #121824 !important;
+            border-radius: 10px;
+        }
+
+        .text-muted-custom {
+            color: var(--text-muted) !important;
+        }
+    </style>
 </head>
-<body class="bg-light">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow">
-        <a class="navbar-brand font-weight-bold" href="{% url 'index' %}">🧠 NeuroLink</a>
-        <div class="collapse navbar-collapse">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item"><a class="nav-link" href="{% url 'paciente' %}">Pacientes</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'psicologo' %}">Psicólogos</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'consulta' %}">Consultas</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'cidade' %}">Cidades</a></li>
-            </ul>
-            <a class="btn btn-warning font-weight-bold" href="/admin/">Acessar Admin</a>
+<body>
+
+    <!-- BARRA DE NAVEGAÇÃO -->
+    <nav class="navbar navbar-expand-lg navbar-dark custom-nav shadow mb-4">
+        <div class="container">
+            <a class="navbar-brand font-weight-bold text-white" href="{% url 'index' %}">🧠 NeuroLink</a>
+            
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#menuNeuroLink" aria-controls="menuNeuroLink" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="menuNeuroLink">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item"><a class="nav-link" href="{% url 'paciente' %}">Pacientes</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'psicologo' %}">Psicólogos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'consulta' %}">Consultas</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'medicamento' %}">Medicamentos</a></li>
+                    
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navClinicas" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Clínicas & Locais
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navClinicas">
+                            <a class="dropdown-item" href="{% url 'clinica' %}">Clínicas</a>
+                            <a class="dropdown-item" href="{% url 'cidade' %}">Cidades</a>
+                        </div>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navAcompanhamento" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Acompanhamento
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navAcompanhamento">
+                            <a class="dropdown-item" href="{% url 'registro_diario' %}">Registro Diário</a>
+                            <a class="dropdown-item" href="{% url 'emocao' %}">Emoções</a>
+                            <a class="dropdown-item" href="{% url 'tratamento' %}">Tratamentos</a>
+                            <a class="dropdown-item" href="{% url 'historico_acompanhamento' %}">Histórico de Acompanhamento</a>
+                        </div>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navAnalises" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Análises & Relatórios
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navAnalises">
+                            <a class="dropdown-item" href="{% url 'analise_comportamental' %}">Análise Comportamental</a>
+                            <a class="dropdown-item" href="{% url 'categoria_risco' %}">Categorias de Risco</a>
+                            <a class="dropdown-item" href="{% url 'relatorio_emocional' %}">Relatório Emocional</a>
+                        </div>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navAlertas" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Alertas & Logs
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navAlertas">
+                            <a class="dropdown-item" href="{% url 'alerta' %}">Alertas</a>
+                            <a class="dropdown-item" href="{% url 'notificacao' %}">Notificações</a>
+                        </div>
+                    </li>
+                </ul>
+                <a class="btn btn-admin font-weight-bold px-4" href="/admin/">Acessar Admin</a>
+            </div>
         </div>
     </nav>
+    
+    <!-- CONTEÚDO DO DASHBOARD -->
     <div class="container mt-5">
-        <div class="jumbotron text-center bg-white shadow-sm border">
-            <h1 class="display-4 text-primary font-weight-bold">NeuroLink</h1>
-            <p class="lead">Sistema de Monitoramento Contínuo da Saúde Mental</p>
-            <hr class="my-4">
-            <p class="text-muted">Utilize o menu superior para gerenciar os prontuários, consultas e acompanhar a evolução dos pacientes no sistema.</p>
+        
+        <!-- Boas-vindas -->
+        <div class="row mb-5 mt-4">
+            <div class="col-12 text-center text-md-left">
+                <h1 class="font-weight-bold text-white">Olá, Administrador! 👋</h1>
+                <p class="text-muted-custom" style="font-size: 1.1rem;">Bem-vindo ao centro de controle do NeuroLink. Monitore a saúde mental e os atendimentos em tempo real.</p>
+            </div>
         </div>
+
+        <!-- CARDS DE CONTADORES RÁPIDOS (KPIs) -->
+        <div class="row mb-5">
+            <!-- Card Pacientes -->
+            <a href="{% url 'paciente' %}" class="col-xl-3 col-md-6 mb-4 text-decoration-none hover-card">
+                <div class="card border-0 premium-card g-cyan text-white shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-uppercase mb-1" style="opacity: 0.8; font-size: 0.75rem;">Pacientes Ativos</div>
+                                <div class="h4 mb-0 font-weight-bold">Gerenciar</div>
+                            </div>
+                            <div class="col-auto">
+                                <div class="icon-shape"><i class="fas fa-user-injured fa-lg"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Card Consultas -->
+            <a href="{% url 'consulta' %}" class="col-xl-3 col-md-6 mb-4 text-decoration-none hover-card">
+                <div class="card border-0 premium-card g-green text-white shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-uppercase mb-1" style="opacity: 0.8; font-size: 0.75rem;">Consultas Agendadas</div>
+                                <div class="h4 mb-0 font-weight-bold">Agendamentos</div>
+                            </div>
+                            <div class="col-auto">
+                                <div class="icon-shape"><i class="fas fa-calendar-check fa-lg"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Card Psicólogos -->
+            <a href="{% url 'psicologo' %}" class="col-xl-3 col-md-6 mb-4 text-decoration-none hover-card">
+                <div class="card border-0 premium-card g-purple text-white shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-uppercase mb-1" style="opacity: 0.8; font-size: 0.75rem;">Corpo Clínico</div>
+                                <div class="h4 mb-0 font-weight-bold">Psicólogos</div>
+                            </div>
+                            <div class="col-auto">
+                                <div class="icon-shape"><i class="fas fa-user-md fa-lg"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Card Alertas Críticos -->
+            <a href="{% url 'alerta' %}" class="col-xl-3 col-md-6 mb-4 text-decoration-none hover-card">
+                <div class="card border-0 premium-card g-red text-white shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-uppercase mb-1" style="opacity: 0.8; font-size: 0.75rem;">Alertas Críticos</div>
+                                <div class="h4 mb-0 font-weight-bold">Segurança</div>
+                            </div>
+                            <div class="col-auto">
+                                <div class="icon-shape"><i class="fas fa-exclamation-triangle fa-lg"></i></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <!-- MÓDULOS DE ACESSO RÁPIDO -->
+        <h4 class="font-weight-bold mb-4 text-white" style="letter-spacing: 0.5px;"><i class="fas fa-th-large mr-2 text-muted-custom"></i>MÓDULOS DO SISTEMA</h4>
+        
+        <div class="row">
+            <!-- Card Pacientes -->
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 premium-card hover-card shadow-sm">
+                    <div class="card-body text-center d-flex flex-column justify-content-between py-4">
+                        <div>
+                            <div class="mb-3" style="color: var(--accent-cyan);"><i class="fas fa-users fa-2x"></i></div>
+                            <h5 class="card-title font-weight-bold text-white">Pacientes</h5>
+                            <p class="card-text text-muted-custom small px-2">Visualize a listagem, edite informações cruciais e remova registros de pacientes ativos.</p>
+                        </div>
+                        <a href="{% url 'paciente' %}" class="btn btn-premium-cyan btn-sm btn-block py-2 mt-3">Abrir Módulo</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card Psicólogos -->
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 premium-card hover-card shadow-sm">
+                    <div class="card-body text-center d-flex flex-column justify-content-between py-4">
+                        <div>
+                            <div class="mb-3" style="color: var(--accent-green);"><i class="fas fa-user-tie fa-2x"></i></div>
+                            <h5 class="card-title font-weight-bold text-white">Psicólogos</h5>
+                            <p class="card-text text-muted-custom small px-2">Gerencie a equipe de profissionais, psicoterapeutas e seus dados de registro profissional.</p>
+                        </div>
+                        <a href="{% url 'psicologo' %}" class="btn btn-premium-cyan btn-sm btn-block py-2 mt-3">Abrir Módulo</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card Consultas -->
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 premium-card hover-card shadow-sm">
+                    <div class="card-body text-center d-flex flex-column justify-content-between py-4">
+                        <div>
+                            <div class="mb-3" style="color: var(--accent-purple);"><i class="fas fa-clock fa-2x"></i></div>
+                            <h5 class="card-title font-weight-bold text-white">Consultas</h5>
+                            <p class="card-text text-muted-custom small px-2">Controle a agenda clínica, datas de sessões ativas e novos horários de atendimento.</p>
+                        </div>
+                        <a href="{% url 'consulta' %}" class="btn btn-premium-cyan btn-sm btn-block py-2 mt-3">Abrir Módulo</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card Diário Emocional -->
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 premium-card hover-card shadow-sm">
+                    <div class="card-body text-center d-flex flex-column justify-content-between py-4">
+                        <div>
+                            <div class="mb-3" style="color: #f59e0b;"><i class="fas fa-journal-whills fa-2x"></i></div>
+                            <h5 class="card-title font-weight-bold text-white">Diário Emocional</h5>
+                            <p class="card-text text-muted-custom small px-2">Acompanhe os registros diários de humor e notas mentais feitas diretamente por pacientes.</p>
+                        </div>
+                        <a href="{% url 'registro_diario' %}" class="btn btn-premium-cyan btn-sm btn-block py-2 mt-3">Abrir Módulo</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card Relatórios Emocionais -->
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 premium-card hover-card shadow-sm">
+                    <div class="card-body text-center d-flex flex-column justify-content-between py-4">
+                        <div>
+                            <div class="mb-3" style="color: var(--accent-red);"><i class="fas fa-chart-line fa-2x"></i></div>
+                            <h5 class="card-title font-weight-bold text-white">Relatórios Emocionais</h5>
+                            <p class="card-text text-muted-custom small px-2">Gere planilhas, sumários analíticos e inteligência estatística dos sentimentos coletados.</p>
+                        </div>
+                        <a href="{% url 'relatorio_emocional' %}" class="btn btn-premium-cyan btn-sm btn-block py-2 mt-3">Abrir Módulo</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card Tratamentos -->
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 premium-card hover-card shadow-sm">
+                    <div class="card-body text-center d-flex flex-column justify-content-between py-4">
+                        <div>
+                            <div class="mb-3" style="color: #a855f7;"><i class="fas fa-heartbeat fa-2x"></i></div>
+                            <h5 class="card-title font-weight-bold text-white">Tratamentos</h5>
+                            <p class="card-text text-muted-custom small px-2">Monitore a evolução de metodologias e intervenções clínicas aplicadas a cada caso.</p>
+                        </div>
+                        <a href="{% url 'tratamento' %}" class="btn btn-premium-cyan btn-sm btn-block py-2 mt-3">Abrir Módulo</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
+
+    <!-- NOTA DE RODAPÉ -->
+    <footer class="text-center py-4 mt-5" style="background-color: var(--bg-card); border-top: 1px solid rgba(255, 255, 255, 0.05);">
+        <p class="mb-0 small text-muted-custom">&copy; 2026 NeuroLink - Sistema de Monitoramento de Saúde Mental Integrado.</p>
+    </footer>
+
+    <!-- SCRIPTS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

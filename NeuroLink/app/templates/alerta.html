@@ -2,27 +2,245 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>NeuroLink - Alertas</title>
+    <title>NeuroLink - Premium Alertas</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Ícones do FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        :root {
+            --bg-main: #0f141c; 
+            --bg-card: #182030; 
+            --text-main: #f8fafc; 
+            --text-muted: #64748b; 
+            --accent-cyan: #38bdf8; 
+            --accent-red: #fb7185; 
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            font-family: 'Inter', 'Segoe UI', Roboto, sans-serif;
+            letter-spacing: -0.01em;
+        }
+
+        /* Barra de navegação unificada */
+        .custom-nav {
+            background-color: #131a26 !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        }
+        
+        .nav-link { 
+            color: #94a3b8 !important;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+        .nav-link:hover {
+            color: var(--accent-cyan) !important;
+        }
+
+        .dropdown-menu {
+            background-color: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+        }
+        .dropdown-item {
+            color: #94a3b8;
+            transition: all 0.2s ease;
+        }
+        .dropdown-item:hover {
+            background-color: rgba(56, 189, 248, 0.08);
+            color: var(--accent-cyan);
+        }
+
+        /* Estrutura do Card de Conteúdo Principal */
+        .main-card {
+            background-color: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+        }
+
+        .main-card-header {
+            background-color: rgba(255, 255, 255, 0.01);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 1.5rem;
+            letter-spacing: 0.5px;
+        }
+
+        /* Estilização da lista de alertas como Logs Modernos */
+        .custom-list-item {
+            background-color: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.04) !important;
+            color: var(--text-main);
+            border-radius: 10px !important;
+            margin-bottom: 10px;
+            padding: 1rem 1.25rem;
+            display: flex;
+            align-items: center;
+            border-left: 4px solid var(--accent-red) !important; /* Detalhe lateral de Alerta */
+            transition: transform 0.2s ease;
+        }
+        .custom-list-item:hover {
+            transform: translateX(4px);
+            background-color: rgba(255, 255, 255, 0.04);
+        }
+
+        .empty-item {
+            background-color: rgba(251, 113, 133, 0.05);
+            border: 1px dashed rgba(251, 113, 133, 0.3) !important;
+            border-radius: 10px;
+            padding: 2rem;
+        }
+
+        /* Botões customizados */
+        .btn-premium {
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #e2e8f0;
+            border-radius: 10px;
+            font-weight: 500;
+            background-color: rgba(255, 255, 255, 0.02);
+            transition: all 0.2s ease;
+        }
+        .btn-premium:hover {
+            background-color: var(--text-main);
+            color: var(--bg-main);
+        }
+
+        .btn-admin {
+            border: 1px solid var(--accent-cyan);
+            color: var(--accent-cyan) !important;
+            border-radius: 10px;
+            transition: all 0.2s ease;
+        }
+        .btn-admin:hover {
+            background-color: var(--accent-cyan);
+            color: var(--bg-main) !important;
+        }
+
+        .btn-action-warning {
+            border: 1px solid #f59e0b;
+            color: #f59e0b !important;
+            border-radius: 10px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        .btn-action-warning:hover {
+            background-color: #f59e0b;
+            color: var(--bg-main) !important;
+        }
+    </style>
 </head>
-<body class="bg-light">
-    <div class="container mt-5">
-        <div class="card shadow">
-            <div class="card-header bg-primary text-white font-weight-bold">📋 LISTAGEM DE ALERTAS</div>
-            <div class="card-body">
-                <ul class="list-group">
-                    {% for item in alertas %}
-                        <li class="list-group-item">{{ item }}</li>
-                    {% empty %}
-                        <li class="list-group-item text-danger text-center">Nenhum alerta psicológico emitido no banco de dados.</li>
-                    {% endfor %}
+<body>
+
+    <!-- BARRA DE NAVEGAÇÃO -->
+    <nav class="navbar navbar-expand-lg navbar-dark custom-nav shadow-sm mb-4">
+        <div class="container">
+            <a class="navbar-brand font-weight-bold text-white" href="{% url 'index' %}">🧠 NeuroLink</a>
+            
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#menuNeuroLink" aria-controls="menuNeuroLink" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="menuNeuroLink">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item"><a class="nav-link" href="{% url 'paciente' %}">Pacientes</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'psicologo' %}">Psicólogos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'consulta' %}">Consultas</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'medicamento' %}">Medicamentos</a></li>
+                    
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navClinicas" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Clínicas & Locais
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navClinicas">
+                            <a class="dropdown-item" href="{% url 'clinica' %}">Clínicas</a>
+                            <a class="dropdown-item" href="{% url 'cidade' %}">Cidades</a>
+                        </div>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navAcompanhamento" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Acompanhamento
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navAcompanhamento">
+                            <a class="dropdown-item" href="{% url 'registro_diario' %}">Registro Diário</a>
+                            <a class="dropdown-item" href="{% url 'emocao' %}">Emoções</a>
+                            <a class="dropdown-item" href="{% url 'tratamento' %}">Tratamentos</a>
+                            <a class="dropdown-item" href="{% url 'historico_acompanhamento' %}">Histórico de Acompanhamento</a>
+                        </div>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navAnalises" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Análises & Relatórios
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navAnalises">
+                            <a class="dropdown-item" href="{% url 'analise_comportamental' %}">Análise Comportamental</a>
+                            <a class="dropdown-item" href="{% url 'categoria_risco' %}">Categorias de Risco</a>
+                            <a class="dropdown-item" href="{% url 'relatorio_emocional' %}">Relatório Emocional</a>
+                        </div>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navAlertas" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Alertas & Logs
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navAlertas">
+                            <a class="dropdown-item" href="{% url 'alerta' %}">Alertas</a>
+                            <a class="dropdown-item" href="{% url 'notificacao' %}">Notificações</a>
+                        </div>
+                    </li>
                 </ul>
-                <div class="mt-4">
-                    <a href="{% url 'index' %}" class="btn btn-secondary">Voltar</a>
-                    <a href="/admin/" class="btn btn-warning font-weight-bold">Cadastrar no Admin</a>
+                <a class="btn btn-admin font-weight-bold px-4" href="/admin/">Acessar Admin</a>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- LISTAGEM DE ALERTAS -->
+    <div class="container mt-5">
+        <div class="card main-card shadow-lg">
+            <div class="main-card-header font-weight-bold text-white d-flex align-items-center">
+                <i class="fas fa-exclamation-triangle mr-3" style="color: var(--accent-red); font-size: 1.25rem;"></i>
+                📋 LISTAGEM DE ALERTAS PSICOLÓGICOS
+            </div>
+            <div class="card-body p-4">
+                
+                <div class="mb-4">
+                    {% for item in alertas %}
+                        <div class="custom-list-item">
+                            <i class="fas fa-circle-notch fa-spin mr-3" style="color: var(--accent-red); font-size: 0.8rem;"></i>
+                            <span>{{ item }}</span>
+                        </div>
+                    {% empty %}
+                        <div class="empty-item text-center">
+                            <i class="fas fa-shield-alt fa-3x mb-3" style="color: var(--accent-red); opacity: 0.6;"></i>
+                            <p class="text-white font-weight-bold mb-1">Tudo seguro por aqui!</p>
+                            <p class="small mb-0 text-muted-custom" style="color: var(--text-muted) !important;">Nenhum alerta psicológico emitido no banco de dados.</p>
+                        </div>
+                    {% endfor %}
                 </div>
+
+                <!-- Botões de Ação Inferiores -->
+                <div class="mt-4 pt-3 border-top" style="border-top-color: rgba(255,255,255,0.05) !important;">
+                    <a href="{% url 'index' %}" class="btn btn-premium px-4 mr-2">
+                        <i class="fas fa-arrow-left mr-2"></i>Voltar
+                    </a>
+                    <a href="/admin/" class="btn btn-action-warning px-4">
+                        <i class="fas fa-plus mr-2"></i>Cadastrar no Admin
+                    </a>
+                </div>
+
             </div>
         </div>
     </div>
+
+    <!-- NOTA DE RODAPÉ -->
+    <footer class="text-center py-4 mt-5" style="background-color: #0c1017; border-top: 1px solid rgba(255, 255, 255, 0.02);">
+        <p class="mb-0 small" style="color: #475569;">&copy; 2026 NeuroLink - Sistema de Monitoramento de Saúde Mental Integrado.</p>
+    </footer>
+
+    <!-- SCRIPTS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>

@@ -2,66 +2,260 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>NeuroLink - Pacientes</title>
+    <title>NeuroLink - Pacientes Premium</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Ícones do FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        :root {
+            --bg-main: #0f141c; 
+            --bg-card: #182030; 
+            --text-main: #f8fafc; 
+            --text-muted: #64748b; 
+            --accent-cyan: #38bdf8; 
+            --accent-royal: #4f46e5;
+        }
+
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            font-family: 'Inter', 'Segoe UI', Roboto, sans-serif;
+            letter-spacing: -0.01em;
+        }
+
+        /* Barra de navegação unificada */
+        .custom-nav {
+            background-color: #131a26 !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        }
+        
+        .nav-link { 
+            color: #94a3b8 !important;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+        .nav-link:hover {
+            color: var(--accent-cyan) !important;
+        }
+
+        .dropdown-menu {
+            background-color: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+        }
+        .dropdown-item {
+            color: #94a3b8;
+            transition: all 0.2s ease;
+        }
+        .dropdown-item:hover {
+            background-color: rgba(56, 189, 248, 0.08);
+            color: var(--accent-cyan);
+        }
+
+        /* Estrutura do Card de Conteúdo Principal */
+        .main-card {
+            background-color: var(--bg-card);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+        }
+
+        .main-card-header {
+            background-color: rgba(255, 255, 255, 0.01);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 1.5rem;
+            letter-spacing: 0.5px;
+        }
+
+        /* Estilização da Tabela */
+        .table {
+            color: var(--text-main);
+        }
+        .table thead th {
+            border-top: none;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+        }
+        .table td {
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            vertical-align: middle;
+        }
+
+        /* Botões customizados */
+        .btn-premium {
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: #e2e8f0;
+            border-radius: 10px;
+            font-weight: 500;
+            background-color: rgba(255, 255, 255, 0.02);
+            transition: all 0.2s ease;
+        }
+        .btn-premium:hover {
+            background-color: var(--text-main);
+            color: var(--bg-main);
+        }
+
+        .btn-admin {
+            border: 1px solid var(--accent-cyan);
+            color: var(--accent-cyan) !important;
+            border-radius: 10px;
+            transition: all 0.2s ease;
+        }
+        .btn-admin:hover {
+            background-color: var(--accent-cyan);
+            color: var(--bg-main) !important;
+        }
+
+        .btn-edit {
+            border: 1px solid var(--accent-royal);
+            color: var(--accent-royal) !important;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+        .btn-edit:hover {
+            background-color: var(--accent-royal);
+            color: white !important;
+        }
+        
+        .btn-delete {
+            border: 1px solid #ef4444;
+            color: #ef4444 !important;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+        .btn-delete:hover {
+            background-color: #ef4444;
+            color: white !important;
+        }
+    </style>
 </head>
-<body class="bg-light">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow">
-        <a class="navbar-brand font-weight-bold" href="{% url 'index' %}">🧠 NeuroLink</a>
-        <div class="collapse navbar-collapse">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item"><a class="nav-link" href="{% url 'paciente' %}">Pacientes</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'psicologo' %}">Psicólogos</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'consulta' %}">Consultas</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'cidade' %}">Cidades</a></li>
-            </ul>
-            <a class="btn btn-warning font-weight-bold" href="/admin/">Acessar Admin</a>
+<body>
+
+    <!-- BARRA DE NAVEGAÇÃO -->
+    <nav class="navbar navbar-expand-lg navbar-dark custom-nav shadow-sm mb-4">
+        <div class="container">
+            <a class="navbar-brand font-weight-bold text-white" href="{% url 'index' %}">🧠 NeuroLink</a>
+            
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#menuNeuroLink" aria-controls="menuNeuroLink" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="menuNeuroLink">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item"><a class="nav-link" href="{% url 'paciente' %}">Pacientes</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'psicologo' %}">Psicólogos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'consulta' %}">Consultas</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'medicamento' %}">Medicamentos</a></li>
+                    
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navClinicas" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Clínicas & Locais
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navClinicas">
+                            <a class="dropdown-item" href="{% url 'clinica' %}">Clínicas</a>
+                            <a class="dropdown-item" href="{% url 'cidade' %}">Cidades</a>
+                        </div>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navAcompanhamento" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Acompanhamento
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navAcompanhamento">
+                            <a class="dropdown-item" href="{% url 'registro_diario' %}">Registro Diário</a>
+                            <a class="dropdown-item" href="{% url 'emocao' %}">Emoções</a>
+                            <a class="dropdown-item" href="{% url 'tratamento' %}">Tratamentos</a>
+                            <a class="dropdown-item" href="{% url 'historico_acompanhamento' %}">Histórico de Acompanhamento</a>
+                        </div>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navAnalises" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Análises & Relatórios
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navAnalises">
+                            <a class="dropdown-item" href="{% url 'analise_comportamental' %}">Análise Comportamental</a>
+                            <a class="dropdown-item" href="{% url 'categoria_risco' %}">Categorias de Risco</a>
+                            <a class="dropdown-item" href="{% url 'relatorio_emocional' %}">Relatório Emocional</a>
+                        </div>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navAlertas" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Alertas & Logs
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navAlertas">
+                            <a class="dropdown-item" href="{% url 'alerta' %}">Alertas</a>
+                            <a class="dropdown-item" href="{% url 'notificacao' %}">Notificações</a>
+                        </div>
+                    </li>
+                </ul>
+                <a class="btn btn-admin font-weight-bold px-4" href="/admin/">Acessar Admin</a>
+            </div>
         </div>
     </nav>
+    
+    <!-- CONTEÚDO PRINCIPAL -->
     <div class="container mt-5">
-        
-        <!-- Mensagens de Sucesso do Django -->
         {% if messages %}
             {% for message in messages %}
-                <div class="alert alert-success shadow-sm">{{ message }}</div>
+                <div class="alert alert-success shadow-sm" style="background: rgba(16, 185, 129, 0.1); border: 1px solid #10b981; color: #10b981;">{{ message }}</div>
             {% endfor %}
         {% endif %}
 
-        <div class="card shadow">
-            <div class="card-header bg-primary text-white font-weight-bold">📋 PAINEL DE CONTROLE DE PACIENTES</div>
-            <div class="card-body">
+        <div class="card main-card shadow-lg">
+            <div class="main-card-header font-weight-bold text-white d-flex align-items-center">
+                <i class="fas fa-users mr-3" style="color: var(--accent-royal); font-size: 1.25rem;"></i>
+                📋 GERENCIAMENTO DE PACIENTES
+            </div>
+            <div class="card-body p-4">
                 
-                <table class="table table-hover border">
-                    <thead class="thead-light">
+                <table class="table table-hover">
+                    <thead>
                         <tr>
-                            <th>Nome do Paciente</th>
+                            <th>Paciente</th>
                             <th class="text-center">Ações</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for item in pacientes %}
                             <tr>
-                                <td class="align-middle font-weight-bold text-secondary">{{ item.nome }}</td>
+                                <td class="font-weight-bold text-light">{{ item.nome }}</td>
                                 <td class="text-center">
-                                    <!-- Botões com as rotas que criamos -->
-                                    <a href="{% url 'editar_paciente' item.id %}" class="btn btn-sm btn-warning">Editar</a>
-                                    <a href="{% url 'delete_paciente' item.id %}" class="btn btn-sm btn-danger" onclick="return confirm('Tem certeza que deseja excluir?')">Excluir</a>
+                                    <a href="{% url 'editar_paciente' item.id %}" class="btn btn-sm btn-edit px-3 mr-2">Editar</a>
+                                    <a href="{% url 'delete_paciente' item.id %}" class="btn btn-sm btn-delete px-3" onclick="return confirm('Tem certeza que deseja excluir?')">Excluir</a>
                                 </td>
                             </tr>
                         {% empty %}
                             <tr>
-                                <td colspan="2" class="text-danger text-center font-italic">Nenhum paciente cadastrado no sistema.</td>
+                                <td colspan="2" class="text-center text-muted py-5">Nenhum paciente cadastrado no sistema.</td>
                             </tr>
                         {% endfor %}
                     </tbody>
                 </table>
 
-                <div class="mt-4">
-                    <a href="{% url 'index' %}" class="btn btn-secondary">Voltar para Home</a>
-                    <a href="/admin/" class="btn btn-success font-weight-bold">Cadastrar Novo no Admin</a>
+                <div class="mt-4 pt-3 border-top" style="border-top-color: rgba(255,255,255,0.05) !important;">
+                    <a href="{% url 'index' %}" class="btn btn-premium px-4 mr-2">
+                        <i class="fas fa-arrow-left mr-2"></i>Voltar
+                    </a>
+                    <a href="/admin/" class="btn btn-premium px-4 text-white" style="background-color: var(--accent-royal); border: none;">
+                        <i class="fas fa-user-plus mr-2"></i>Cadastrar no Admin
+                    </a>
                 </div>
+
             </div>
         </div>
     </div>
+
+    <!-- RODAPÉ -->
+    <footer class="text-center py-4 mt-5" style="background-color: #0c1017; border-top: 1px solid rgba(255, 255, 255, 0.02);">
+        <p class="mb-0 small" style="color: #475569;">&copy; 2026 NeuroLink - Sistema de Monitoramento de Saúde Mental Integrado.</p>
+    </footer>
+
+    <!-- SCRIPTS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
