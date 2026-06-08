@@ -1,135 +1,215 @@
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from django.contrib import messages
+from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth.models import User
 from .models import (
     Cidade, Paciente, Clinica, Psicologo, Emocao, RegistroDiario,
     CategoriaRisco, AnaliseComportamental, Alerta, Consulta,
     Tratamento, Medicamento, Notificacao, RelatorioEmocional, HistoricoAcompanhamento
 )
 
-# 1. Página Inicial
+# --- LOGIN E AUTENTICAÇÃO ---
+
+class LoginView(View):
+    def get(self, request):
+        return render(request, 'login.html')
+
+    def post(self, request):
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('index')
+        else:
+            messages.error(request, 'Usuário ou senha inválidos.')
+            return render(request, 'login.html')
+
+def logout_view(request):
+    logout(request)
+    return redirect('login')
+
+def alternar_usuario(request, tipo):
+    logout(request)
+    messages.info(request, f'Por favor, faça login como {tipo.capitalize()}.')
+    return redirect('login')
+
+# --- CLASSES DE VIEW (DINÂMICAS) ---
+
+@method_decorator(login_required(login_url='login'), name='dispatch')
 class IndexView(View):
     def get(self, request, *args, **kwargs):
-        return render(request, 'index.html')
-    def post(self, request):
-        pass
+        return render(request, 'index.html', {'titulo_pagina': 'Dashboard', 'icone_pagina': 'fa-tachometer-alt', 'descricao': 'Visão geral do sistema'})
 
-# 2. RF01 - Gerenciar pacientes
+@method_decorator(login_required(login_url='login'), name='dispatch')
 class PacienteView(View):
     def get(self, request, *args, **kwargs):
-        pacientes = Paciente.objects.all()
-        return render(request, 'paciente.html', {'pacientes': pacientes})
+        return render(request, 'paciente.html', {
+            'pacientes': Paciente.objects.all(),
+            'titulo_pagina': 'Gestão de Pacientes',
+            'icone_pagina': 'fa-user-injured',
+            'descricao': 'Lista de pacientes cadastrados no sistema.'
+        })
 
-# 3. RF02 - Gerenciar psicólogos
+@method_decorator(login_required(login_url='login'), name='dispatch')
 class PsicologoView(View):
     def get(self, request, *args, **kwargs):
-        psicologos = Psicologo.objects.all()
-        return render(request, 'psicologo.html', {'psicologos': psicologos})
+        return render(request, 'psicologo.html', {
+            'psicologos': Psicologo.objects.all(),
+            'titulo_pagina': 'Corpo Clínico',
+            'icone_pagina': 'fa-user-md',
+            'descricao': 'Psicólogos ativos e profissionais da rede.'
+        })
 
-# 4. RF03 - Gerenciar clínicas psicológicas
+@method_decorator(login_required(login_url='login'), name='dispatch')
 class ClinicaView(View):
     def get(self, request, *args, **kwargs):
-        clinicas = Clinica.objects.all()
-        return render(request, 'clinica.html', {'clinicas': clinicas})
+        return render(request, 'clinica.html', {
+            'clinicas': Clinica.objects.all(),
+            'titulo_pagina': 'Clínicas & Locais',
+            'icone_pagina': 'fa-clinic-medical',
+            'descricao': 'Unidades de atendimento registradas.'
+        })
 
-# 5. RF04 - Gerenciar emoções registradas
+@method_decorator(login_required(login_url='login'), name='dispatch')
 class EmocaoView(View):
     def get(self, request, *args, **kwargs):
-        emocoes = Emocao.objects.all()
-        return render(request, 'emocao.html', {'emocoes': emocoes})
+        return render(request, 'emocao.html', {
+            'emocoes': Emocao.objects.all(),
+            'titulo_pagina': 'Monitoramento de Emoções',
+            'icone_pagina': 'fa-grin-beam',
+            'descricao': 'Registro e análise de estados emocionais.'
+        })
 
-# 6. RF05 - Gerenciar registros diários
+@method_decorator(login_required(login_url='login'), name='dispatch')
 class RegistroDiarioView(View):
     def get(self, request, *args, **kwargs):
-        registros = RegistroDiario.objects.all()
-        return render(request, 'registro_diario.html', {'registros': registros})
+        return render(request, 'registro_diario.html', {
+            'registros': RegistroDiario.objects.all(),
+            'titulo_pagina': 'Registro Diário',
+            'icone_pagina': 'fa-book',
+            'descricao': 'Acompanhamento do progresso diário.'
+        })
 
-# 7. RF06 - Gerenciar análises comportamentais
+@method_decorator(login_required(login_url='login'), name='dispatch')
 class AnaliseComportamentalView(View):
     def get(self, request, *args, **kwargs):
-        analises = AnaliseComportamental.objects.all()
-        return render(request, 'analise_comportamental.html', {'analises': analises})
+        return render(request, 'analise_comportamental.html', {
+            'analises': AnaliseComportamental.objects.all(),
+            'titulo_pagina': 'Análise Comportamental',
+            'icone_pagina': 'fa-chart-line',
+            'descricao': 'Relatórios detalhados de comportamento.'
+        })
 
-# 8. RF07 - Gerenciar alertas psicológicos
+@method_decorator(login_required(login_url='login'), name='dispatch')
 class AlertaView(View):
     def get(self, request, *args, **kwargs):
-        alertas = Alerta.objects.all()
-        return render(request, 'alerta.html', {'alertas': alertas})
+        return render(request, 'alerta.html', {
+            'alertas': Alerta.objects.all(),
+            'titulo_pagina': 'Central de Alertas',
+            'icone_pagina': 'fa-exclamation-triangle',
+            'descricao': 'Notificações críticas e pendências.'
+        })
 
-# 9. RF08 - Gerenciar consultas
+@method_decorator(login_required(login_url='login'), name='dispatch')
 class ConsultaView(View):
     def get(self, request, *args, **kwargs):
-        consultas = Consulta.objects.all()
-        return render(request, 'consulta.html', {'consultas': consultas})
+        return render(request, 'consulta.html', {
+            'consultas': Consulta.objects.all(),
+            'titulo_pagina': 'Consultas',
+            'icone_pagina': 'fa-calendar-alt',
+            'descricao': 'Agenda de atendimentos médicos.'
+        })
 
-# 10. RF09 - Gerenciar tratamentos
+@method_decorator(login_required(login_url='login'), name='dispatch')
 class TratamentoView(View):
     def get(self, request, *args, **kwargs):
-        tratamentos = Tratamento.objects.all()
-        return render(request, 'tratamento.html', {'tratamentos': tratamentos})
+        return render(request, 'tratamento.html', {
+            'tratamentos': Tratamento.objects.all(),
+            'titulo_pagina': 'Tratamentos',
+            'icone_pagina': 'fa-pills',
+            'descricao': 'Planos terapêuticos em curso.'
+        })
 
-# 11. RF10 - Gerenciar medicamentos
+@method_decorator(login_required(login_url='login'), name='dispatch')
 class MedicamentoView(View):
     def get(self, request, *args, **kwargs):
-        medicamentos = Medicamento.objects.all()
-        return render(request, 'medicamento.html', {'medicamentos': medicamentos})
+        return render(request, 'medicamento.html', {
+            'medicamentos': Medicamento.objects.all(),
+            'titulo_pagina': 'Medicamentos',
+            'icone_pagina': 'fa-capsules',
+            'descricao': 'Controle de medicação e posologia.'
+        })
 
-# 12. RF11 - Gerenciar notificações
+@method_decorator(login_required(login_url='login'), name='dispatch')
 class NotificacaoView(View):
     def get(self, request, *args, **kwargs):
-        notificacoes = Notificacao.objects.all()
-        return render(request, 'notificacao.html', {'notificacoes': notificacoes})
+        return render(request, 'notificacao.html', {
+            'notificacoes': Notificacao.objects.all(),
+            'titulo_pagina': 'Notificações',
+            'icone_pagina': 'fa-bell',
+            'descricao': 'Histórico de avisos do sistema.'
+        })
 
-# 13. RF12 - Gerenciar cidades
+@method_decorator(login_required(login_url='login'), name='dispatch')
 class CidadeView(View):
     def get(self, request, *args, **kwargs):
-        cidades = Cidade.objects.all()
-        return render(request, 'cidade.html', {'cidades': cidades})
+        return render(request, 'cidade.html', {
+            'cidades': Cidade.objects.all(),
+            'titulo_pagina': 'Cidades Atendidas',
+            'icone_pagina': 'fa-city',
+            'descricao': 'Cobertura geográfica da rede.'
+        })
 
-# 14. RF13 - Gerenciar relatórios emocionais
+@method_decorator(login_required(login_url='login'), name='dispatch')
 class RelatorioEmocionalView(View):
     def get(self, request, *args, **kwargs):
-        relatorios = RelatorioEmocional.objects.all()
-        return render(request, 'relatorio_emocional.html', {'relatorios': relatorios})
+        return render(request, 'relatorio_emocional.html', {
+            'relatorios': RelatorioEmocional.objects.all(),
+            'titulo_pagina': 'Relatórios Emocionais',
+            'icone_pagina': 'fa-file-medical-alt',
+            'descricao': 'Relatórios consolidados de saúde mental.'
+        })
 
-# 15. RF14 - Gerenciar categorias de risco
+@method_decorator(login_required(login_url='login'), name='dispatch')
 class CategoriaRiscoView(View):
     def get(self, request, *args, **kwargs):
-        categorias = CategoriaRisco.objects.all()
-        return render(request, 'categoria_risco.html', {'categorias': categorias})
+        return render(request, 'categoria_risco.html', {
+            'categorias': CategoriaRisco.objects.all(),
+            'titulo_pagina': 'Categorias de Risco',
+            'icone_pagina': 'fa-biohazard',
+            'descricao': 'Níveis de atenção clínica.'
+        })
 
-# 16. RF15 - Gerenciar histórico de acompanhamento
+@method_decorator(login_required(login_url='login'), name='dispatch')
 class HistoricoAcompanhamentoView(View):
     def get(self, request, *args, **kwargs):
-        historicos = HistoricoAcompanhamento.objects.all()
-        return render(request, 'historico_acompanhamento.html', {'historicos': historicos})
+        return render(request, 'historico_acompanhamento.html', {
+            'historicos': HistoricoAcompanhamento.objects.all(),
+            'titulo_pagina': 'Histórico Geral',
+            'icone_pagina': 'fa-history',
+            'descricao': 'Todo o histórico de acompanhamento registrado.'
+        })
 
-# --- FUNÇÕES ADICIONAIS DO NEUROLINK (DELETE E EDIT) ---
-
+@method_decorator(login_required(login_url='login'), name='dispatch')
 class DeletePacienteView(View):
     def get(self, request, id, *args, **kwargs):
-        # Busca o paciente pelo ID e deleta do banco
-        paciente = Paciente.objects.get(id=id)
-        paciente.delete()
-        messages.success(request, 'Paciente excluído com sucesso!')
-        return redirect('paciente') # Redireciona de volta para a lista
+        Paciente.objects.get(id=id).delete()
+        return redirect('paciente')
 
+@method_decorator(login_required(login_url='login'), name='dispatch')
 class EditarPacienteView(View):
-    template_name = 'editar_paciente.html'
-
     def get(self, request, id, *args, **kwargs):
         paciente = get_object_or_404(Paciente, id=id)
-        # Passamos os dados atuais do paciente para os campos da tela
-        return render(request, self.template_name, {'paciente': paciente})
+        return render(request, 'editar_paciente.html', {'paciente': paciente, 'titulo_pagina': 'Editar Paciente', 'icone_pagina': 'fa-edit', 'descricao': 'Modificar dados do paciente.'})
 
     def post(self, request, id, *args, **kwargs):
         paciente = get_object_or_404(Paciente, id=id)
-        
-        # Captura os dados atualizados vindos do formulário da tela
         paciente.nome = request.POST.get('nome')
         paciente.cpf = request.POST.get('cpf')
         paciente.email = request.POST.get('email')
-        paciente.save() # Salva as alterações no banco de dados
-        
-        messages.success(request, 'As edições foram salvas com sucesso.')
+        paciente.save()
         return redirect('paciente')
